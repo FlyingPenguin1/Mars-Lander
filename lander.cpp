@@ -188,6 +188,7 @@ void Lander :: reset()
    landed = false;
    int fuel = 100;
    canthrust = true;
+   setAddedPointFalse();
 }
 
 /********************************************
@@ -197,4 +198,19 @@ float Lander :: getTotalVelocity() const
 {
    return (sqrt(pow(getVelocity().getDx(), 2) +
       pow(getVelocity().getDy(), 2)));
+}
+
+void Lander :: setAddedPointTrue()
+{
+   addedPoint = true;
+}
+
+void Lander :: setAddedPointFalse()
+{
+   addedPoint = false;
+}
+
+bool Lander :: getAddedPoint()
+{
+   return(addedPoint);
 }

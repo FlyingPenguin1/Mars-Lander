@@ -26,12 +26,16 @@ public:
    void draw(float r, float g, float b);
    void reset();
    float getTotalVelocity() const;
+   void setAddedPointTrue();
+   void setAddedPointFalse();
+   bool getAddedPoint();
 private:
    Point position;
    Velocity velocity;
    bool alive;
    bool landed;
    bool canthrust;
+   bool addedPoint;
    int fuel;
    float yAcceleration;
    float xAcceleration;

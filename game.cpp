@@ -23,6 +23,8 @@
 static float landerRed = 0.0;
 static float landerGreen = 1.0;
 static float landerBlue = 0.0;
+static int wins = 0;
+static int losses = 0;
 
 static std::vector <Point> path;
 static std::vector <Point> stars;
@@ -166,12 +168,18 @@ void Game :: handleInput(const Interface & ui)
  *********************************************/
 void Game :: draw(const Interface & ui)
 {
+   int total = wins + losses;
+
    int width1 = 95;
    int width2 = 85;
 
    std::string xv = "XV = ";
    std::string yv = "YV = ";
    std::string totalVelocity = "|V| = ";
+   std::string winsStr = "WINS = ";
+   std::string lossesStr = "LOSSES = ";
+   std::string winRatioStr = "WINS = ";
+   std::string totalPlayedStr = "TOTAL = ";
    std::string temp;
 
    temp = std::to_string(lander.getVelocity().getDx());
@@ -186,11 +194,45 @@ void Game :: draw(const Interface & ui)
    temp.resize(5);
    totalVelocity.append(temp);
 
-   drawRect(Point(bottomRight.getX()-25, topLeft.getY()-25), 50, 50, 0.5);
+   //WINS
+   temp = std::to_string(wins);
+   winsStr.append(temp);
+
+   //LOSSES
+   temp = std::to_string(losses);
+   lossesStr.append(temp);
+
+   //TOTAL
+   temp = std::to_string(total);
+   totalPlayedStr.append(temp);
+
+   //WIN RATIO
+   if(total > 0)
+   {
+      temp = std::to_string(100.0*((float)wins/total));
+   }
+   else
+   {
+      temp = "0";
+   }
+   temp.resize(5);
+   winRatioStr.append(temp);
+   winRatioStr.append("%");
+
+   drawRect(Point(bottomRight.getX()-25, topLeft.getY()-25), 50, 130, 0.5);
    drawText(Point(bottomRight.getX(), topLeft.getY()-10), xv.c_str(), width1);
    drawText(Point(bottomRight.getX(), topLeft.getY()-25), yv.c_str(), width1);
    drawText(Point(bottomRight.getX(),
       topLeft.getY()-40), totalVelocity.c_str(), width1);
+
+   drawText(Point(bottomRight.getX(),
+      topLeft.getY()-55), winsStr.c_str(), width1);
+   drawText(Point(bottomRight.getX(),
+      topLeft.getY()-70), lossesStr.c_str(), width1);
+   drawText(Point(bottomRight.getX(),
+      topLeft.getY()-85), totalPlayedStr.c_str(), width1);
+
+   drawText(Point(-20, topLeft.getY()-25), winRatioStr.c_str(), 10);
 
    //draw stars
    for (int i = 0; i < stars.size(); i++)
@@ -212,6 +254,16 @@ void Game :: draw(const Interface & ui)
    {
       drawRect(Point(0, 2), width1+30, 30, 0);
       drawText(Point(), "SUCCESS! (press up to play again)", width1);
+      for(int i = 0; i < 1700; i ++)
+      {
+         drawDot(Point(random(-800, 800), random(-500, 500)), 0.0, 1.0, 0.0);
+      }
+      if(!lander.getAddedPoint())
+      {
+         wins++;
+         lander.setAddedPointTrue();
+
+      }
    }
 
    if (!lander.isAlive())
@@ -223,6 +275,15 @@ void Game :: draw(const Interface & ui)
       lander.getPoint().getY()), true, true, true);
       drawLanderFlames(Point(lander.getPoint().getX()-5,
       lander.getPoint().getY()), true, true, true);
+      for(int i = 0; i < 1700; i ++)
+      {
+         drawDot(Point(random(-800, 800), random(-500, 500)), 1.0, 0.0, 0.0);
+      }
+      if(!lander.getAddedPoint())
+      {
+         losses++;
+         lander.setAddedPointTrue();
+      }
    }
 
    if (lander.canThrust())
